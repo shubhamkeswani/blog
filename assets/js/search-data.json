@@ -29,7 +29,7 @@
   
       ,"page1": {
           "title": "About Me",
-          "content": "Here I will post my experiments with Machine Learning that is useful for Medical purposes . This is where you put the contents of your About page. Like all your pages, it’s in Markdown format. . This website is powered by fastpages 1. . a blogging platform that natively supports Jupyter notebooks in addition to other formats. &#8617; . |",
+          "content": "Hi there, . My name is Michał Pawłowski and I am a data engineering consultant for a pharma company. . Here I will post my learnings and experiments with ML and AI in the field of medicine. . If you want to find our a bit more about me, see linkedin .",
           "url": "https://ml4med.github.io/web/about/",
           "relUrl": "/about/",
           "date": ""
