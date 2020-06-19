@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://ml4med.github.io/web/markdown/2020/01/14/test-markdown-post.html</loc>
+<loc>https://ml4med.github.io/blog/markdown/2020/01/14/test-markdown-post.html</loc>
 <lastmod>2020-01-14T00:00:00-06:00</lastmod>
 </url>
 <url>
-<loc>https://ml4med.github.io/web/medicalnist/mnist/basic/2020/06/19/fist_post.html</loc>
+<loc>https://ml4med.github.io/blog/medicalnist/mnist/basic/2020/06/19/fist_post.html</loc>
 <lastmod>2020-06-19T00:00:00-05:00</lastmod>
 </url>
 <url>
-<loc>https://ml4med.github.io/web/about/</loc>
+<loc>https://ml4med.github.io/blog/about/</loc>
 </url>
 <url>
-<loc>https://ml4med.github.io/web/</loc>
+<loc>https://ml4med.github.io/blog/</loc>
 </url>
 <url>
-<loc>https://ml4med.github.io/web/search/</loc>
+<loc>https://ml4med.github.io/blog/search/</loc>
 </url>
 <url>
-<loc>https://ml4med.github.io/web/categories/</loc>
+<loc>https://ml4med.github.io/blog/categories/</loc>
 </url>
 </urlset>
