@@ -5,6 +5,7 @@ _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
+.ipynb_checkpoints
 vendor
 _notebooks/.ipynb_checkpoints
 # Local Netlify folder
