@@ -4,12 +4,10 @@ title: About Me
 permalink: /about/
 ---
 
-Here I will post my experiments with Machine Learning that is useful for Medical purposes
+Hi there,
 
-This is where you put the contents of your *About* page. Like all your pages, it's in [Markdown](https://guides.github.com/features/mastering-markdown/) format.
+My name is Michał Pawłowski and I am a data engineering consultant for a pharma company.
 
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
+Here I will post my learnings and experiments with ML and AI in the field of medicine.
 
-
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
+If you want to find our a bit more about me, see [linkedin](https://linkedin.com/in/misza)
