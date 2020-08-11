@@ -7,7 +7,7 @@
 # https://learnxinyminutes.com/docs/yaml/
 
 title: Machine Learning for Medicine
-description: My experiments with machine learning in medicine
+description: My experiments with ML in Medicine
 github_username: ml4med
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "blog"
