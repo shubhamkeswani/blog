@@ -119,7 +119,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      2 min read
+      6 min read
     
 </span></p>
 
@@ -179,6 +179,21 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the <a href="https://ml4med.github.io/blog/basic/sgd/2020/07/20/building-blocks-of-dl-sgd.html">previous post</a> I've explained what is the most important concept in neural networks - technique that allows us to incrementally find minimum of a function. This is called Gradient Descent algorithm!</p>
+<p>In this post I will build on this concept and show you how to create a basic linear model to predict what is on a medical image!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Download-data">Download data<a class="anchor-link" href="#Download-data"> </a></h3><p>As in the <a href="https://ml4med.github.io/blog/medicalnist/mnist/basic/2020/06/19/fist_post.html">first post</a> showing how to build medical image recognition with pure statistics, we need to download data first. For some basic description of how the data looks like, see that <a href="https://ml4med.github.io/blog/medicalnist/mnist/basic/2020/06/19/fist_post.html">first post</a> first ;)</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -570,6 +585,219 @@ HeadCT has 10000 images of a size torch.Size([4096])
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Model">Model<a class="anchor-link" href="#Model"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we need to build the model. Let's use the most basic building blocks of the neural network - linear layer (<code>linear_layer</code> function) and nonlinearity (<code>softmax</code> function).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># it normalizes all 10 classes so we can treat each class prediction as probability that add up to 1.0</span>
+<span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">linear_layer</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="n">weights</span> <span class="o">+</span> <span class="n">bias</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>the model is a simple function composition (results of linear layer and fed into nonlinear layer (<code>softmax</code>)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">softmax</span><span class="p">(</span><span class="n">linear_layer</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the Gradient Descent to work we also need to specify the loss function - this is crucial, as this is the function on which we compute gradients for our parameters. Just a quick recap: Gradient Descent algorithm finds out the values to change function parameters so the function values decreese.</p>
+<p>In your case we minimize <code>loss_func</code>. Parameters of this function (passed in a form of <code>preds</code>) are in the <code>model</code>: <code>wegiths</code> and <code>bias</code>. Gradient Descent will give us values to change each of those parameters so we minimize the <code>loss_func</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">loss_func</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">preds</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">targets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">targets</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">accuracy</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">targets</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And here is the Gradient Descent loop - see comments in the code for details</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
+<span class="c1"># number of training examples</span>
+<span class="n">n</span>  <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+<span class="c1"># batch size - this is necessary as we won&#39;t be able to fit all</span>
+<span class="c1"># the examples into the memmory, so we need to do the computations in batches</span>
+<span class="n">bs</span> <span class="o">=</span> <span class="mi">64</span> 
+<span class="c1"># how many epochs to train for</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">15</span>  
+
+<span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># define weights matrix</span>
+<span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># and bias term</span>
+
+<span class="c1"># in each of those epochs algorithm sees all the images. So in this case</span>
+<span class="c1"># we see all the images 15 times</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span> 
+    <span class="c1"># here is the loop for batches: in each batch we:</span>
+    <span class="c1">#  - see 64 images</span>
+    <span class="c1">#  - compute predictions based on the model</span>
+    <span class="c1">#  - compute the loss</span>
+    <span class="c1">#  - compute gradients and update parameters (wegiths and bias)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">bs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># select images for this batch</span>
+        <span class="n">start_i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">bs</span>
+        <span class="n">end_i</span> <span class="o">=</span> <span class="n">start_i</span> <span class="o">+</span> <span class="n">bs</span>
+        <span class="n">xb</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">start_i</span><span class="p">:</span><span class="n">end_i</span><span class="p">]</span>
+        <span class="n">yb</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">start_i</span><span class="p">:</span><span class="n">end_i</span><span class="p">]</span>
+        
+        <span class="c1"># compute predictions</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>
+        
+        <span class="c1"># compute loss</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_func</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">yb</span><span class="p">)</span>
+
+        <span class="c1"># compute gradients (this is done for us by PyTorch with this backwards function!)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        
+        <span class="c1"># this block is necessary, so computations we do below, are not taken into account when</span>
+        <span class="c1"># computing next gradients</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="c1"># update parameters</span>
+            <span class="n">weights</span> <span class="o">-=</span> <span class="n">weights</span><span class="o">.</span><span class="n">grad</span>
+            <span class="n">bias</span> <span class="o">-=</span> <span class="n">bias</span><span class="o">.</span><span class="n">grad</span>
+            <span class="c1"># zero out the gradients so they are ready for the next batch (otherwise they accumulate values)</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+            <span class="n">bias</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+            
+    <span class="c1"># eventually after each epoch (seeing all the images) we print out how we did</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2"> accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">x_valid</span><span class="p">),</span><span class="n">y_valid</span><span class="p">)</span><span class="si">}</span><span class="s2">%, loss: </span><span class="si">{</span><span class="n">loss_func</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">x_valid</span><span class="p">),</span> <span class="n">y_valid</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Epoch 0 accuracy: 0.7566581964492798%, loss: 2.542754650115967
+Epoch 1 accuracy: 0.7880406975746155%, loss: 2.360753297805786
+Epoch 2 accuracy: 0.7905852198600769%, loss: 2.230025053024292
+Epoch 3 accuracy: 0.8072943091392517%, loss: 2.131834030151367
+Epoch 4 accuracy: 0.9026293754577637%, loss: 2.0553810596466064
+Epoch 5 accuracy: 0.9493638873100281%, loss: 1.9940619468688965
+Epoch 6 accuracy: 0.9626802206039429%, loss: 1.9436719417572021
+Epoch 7 accuracy: 0.9630194902420044%, loss: 1.9014325141906738
+Epoch 8 accuracy: 0.9628498554229736%, loss: 1.8654346466064453
+Epoch 9 accuracy: 0.9625105857849121%, loss: 1.8343321084976196
+Epoch 10 accuracy: 0.9625105857849121%, loss: 1.8071445226669312
+Epoch 11 accuracy: 0.9623409509658813%, loss: 1.7831430435180664
+Epoch 12 accuracy: 0.9623409509658813%, loss: 1.7617722749710083
+Epoch 13 accuracy: 0.962256133556366%, loss: 1.742601990699768
+Epoch 14 accuracy: 0.9618320465087891%, loss: 1.7252955436706543
+CPU times: user 27 s, sys: 4.33 s, total: 31.3 s
+Wall time: 16.4 s
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-did-we-achieve?">What did we achieve?<a class="anchor-link" href="#What-did-we-achieve?"> </a></h3><p>With this simplest neural network we got to 96% accuracy - this is pretty impressive.</p>
+
+</div>
+</div>
+</div>
 </div>
 
 
