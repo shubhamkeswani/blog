@@ -202,6 +202,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span> git clone https://github.com/apolanco3225/Medical-MNIST-Classification.git
+<span class="o">!</span> rm -rf ./medical_mnist
 <span class="o">!</span> mv Medical-MNIST-Classification/resized/ ./medical_mnist
 <span class="o">!</span> rm -rf Medical-MNIST-Classification
 </pre></div>
@@ -219,7 +220,7 @@ window.onload = wrap_img;
 <pre>Cloning into &#39;Medical-MNIST-Classification&#39;...
 remote: Enumerating objects: 58532, done.
 remote: Total 58532 (delta 0), reused 0 (delta 0), pack-reused 58532
-Receiving objects: 100% (58532/58532), 77.86 MiB | 20.76 MiB/s, done.
+Receiving objects: 100% (58532/58532), 77.86 MiB | 17.62 MiB/s, done.
 Resolving deltas: 100% (506/506), done.
 Checking connectivity... done.
 Checking out files: 100% (58959/58959), done.
@@ -271,7 +272,7 @@ Checking out files: 100% (58959/58959), done.
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="o">!</span>ls <span class="o">{</span>PATH<span class="o">}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">PATH</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()]</span>
 <span class="n">classes</span>
 </pre></div>
 
@@ -314,7 +315,7 @@ Checking out files: 100% (58959/58959), done.
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">images</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-    <span class="n">images</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span>ls <span class="o">{</span>PATH/cls<span class="o">}</span>
+    <span class="n">images</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="n">PATH</span><span class="o">/</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
 </pre></div>
 
     </div>
@@ -703,7 +704,6 @@ HeadCT has 10000 images of a size torch.Size([4096])
 <span class="n">bs</span> <span class="o">=</span> <span class="mi">64</span> 
 <span class="c1"># how many epochs to train for</span>
 <span class="n">epochs</span> <span class="o">=</span> <span class="mi">15</span>  
-
 <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># define weights matrix</span>
 <span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># and bias term</span>
 
@@ -755,23 +755,23 @@ HeadCT has 10000 images of a size torch.Size([4096])
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Epoch 0 accuracy: 0.7566581964492798%, loss: 2.542754650115967
-Epoch 1 accuracy: 0.7880406975746155%, loss: 2.360753297805786
-Epoch 2 accuracy: 0.7905852198600769%, loss: 2.230025053024292
-Epoch 3 accuracy: 0.8072943091392517%, loss: 2.131834030151367
-Epoch 4 accuracy: 0.9026293754577637%, loss: 2.0553810596466064
-Epoch 5 accuracy: 0.9493638873100281%, loss: 1.9940619468688965
-Epoch 6 accuracy: 0.9626802206039429%, loss: 1.9436719417572021
-Epoch 7 accuracy: 0.9630194902420044%, loss: 1.9014325141906738
-Epoch 8 accuracy: 0.9628498554229736%, loss: 1.8654346466064453
-Epoch 9 accuracy: 0.9625105857849121%, loss: 1.8343321084976196
-Epoch 10 accuracy: 0.9625105857849121%, loss: 1.8071445226669312
-Epoch 11 accuracy: 0.9623409509658813%, loss: 1.7831430435180664
-Epoch 12 accuracy: 0.9623409509658813%, loss: 1.7617722749710083
-Epoch 13 accuracy: 0.962256133556366%, loss: 1.742601990699768
-Epoch 14 accuracy: 0.9618320465087891%, loss: 1.7252955436706543
-CPU times: user 27 s, sys: 4.33 s, total: 31.3 s
-Wall time: 16.4 s
+<pre>Epoch 0 accuracy: 0.7695504426956177%, loss: 2.5434305667877197
+Epoch 1 accuracy: 0.787277340888977%, loss: 2.3623108863830566
+Epoch 2 accuracy: 0.7912637591362%, loss: 2.232290267944336
+Epoch 3 accuracy: 0.8318066000938416%, loss: 2.134671926498413
+Epoch 4 accuracy: 0.9314673542976379%, loss: 2.058687448501587
+Epoch 5 accuracy: 0.9561492800712585%, loss: 1.9977604150772095
+Epoch 6 accuracy: 0.9601356983184814%, loss: 1.9477065801620483
+Epoch 7 accuracy: 0.9603053331375122%, loss: 1.9057585000991821
+Epoch 8 accuracy: 0.9602205157279968%, loss: 1.8700224161148071
+Epoch 9 accuracy: 0.9598812460899353%, loss: 1.8391577005386353
+Epoch 10 accuracy: 0.9594571590423584%, loss: 1.8121910095214844
+Epoch 11 accuracy: 0.9597116112709045%, loss: 1.788395881652832
+Epoch 12 accuracy: 0.9596267938613892%, loss: 1.7672215700149536
+Epoch 13 accuracy: 0.9598812460899353%, loss: 1.7482411861419678
+Epoch 14 accuracy: 0.9598812460899353%, loss: 1.7311174869537354
+CPU times: user 1min 5s, sys: 173 ms, total: 1min 5s
+Wall time: 9.22 s
 </pre>
 </div>
 </div>
@@ -784,7 +784,7 @@ Wall time: 16.4 s
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-did-we-achieve?">What did we achieve?<a class="anchor-link" href="#What-did-we-achieve?"> </a></h3><p>With this simplest neural network we got to 96% accuracy - this is pretty impressive.</p>
+<h3 id="What-did-we-achieve?">What did we achieve?<a class="anchor-link" href="#What-did-we-achieve?"> </a></h3><p>With this simplest neural network we got to almost 96% accuracy - this is pretty good.</p>
 
 </div>
 </div>
